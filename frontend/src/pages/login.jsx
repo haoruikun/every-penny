@@ -11,34 +11,39 @@ import logo from '../assets/logo.svg';
 import '../css/login.css';
 import stock from '../assets/saving_stock.png';
 import { useState } from 'react';
-
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://ruikunhao.com/" target="_blank">
-        Ruikun Hao
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Alert from '@mui/material/Alert';
+import Copyright from '../components/copyright';
 
 export default function Login(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
 
 
     const handleSubmit = (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      // eslint-disable-next-line no-console
-      console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-      });
+        event.preventDefault();
+
+        fetch("http://localhost:3002/login", {
+            method: "POST",
+            body: JSON.stringify({
+                username,
+                password
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                'Accept': 'application/json'
+            }
+        })
+        .then((response) => response.json())
+        .then((json) => {
+            if (json.result !== "Login success!") {
+                setError(json.result);
+            } else {
+                setError(null);
+                props.setLogin(true);
+                props.setLoggedInUser(username);
+            }
+        })
     };
 
     const handleUsernameChange = (event) => {
@@ -81,6 +86,7 @@ export default function Login(props) {
               <Typography component="h1" variant="h5">
                 Sign in
               </Typography>
+              { error && <Alert severity="error" sx={{ mt: 1, width: '100%' }}>{error}</Alert> }
               <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
                   margin="normal"
@@ -111,12 +117,15 @@ export default function Login(props) {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2, boxShadow: 0 }}
+                  disabled={username === '' || password === ''}
                 >
                   Sign In
                 </Button>
                 <Grid container justifyContent="center">
                   <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link href="#" variant="body2" onClick={() => {
+                        props.setSignUp(true);
+                    }}>
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>
