@@ -53,7 +53,6 @@ export default function Login(props) {
         setPassword(event.target.value);
     }
 
-
   
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
