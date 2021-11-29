@@ -5,6 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+// or for Day.js
+// import DateAdapter from '@mui/lab/AdapterLuxon';
 
 const theme = createTheme({
   palette: {
@@ -26,7 +29,9 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <App />
+        {/* <LocalizationProvider dateAdapter={DateAdapter}> */}
+          <App />
+        {/* </LocalizationProvider> */}
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>,

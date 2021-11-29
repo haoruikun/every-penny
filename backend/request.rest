@@ -18,3 +18,12 @@ Content-Type: application/json
     "username": "admin",
     "password": "admin"
 }
+
+###
+POST http://localhost:3002/spending_by_month
+Content-Type: application/json
+
+{
+    "username": "haoruikun",
+    "year_month": "2021-11"
+}

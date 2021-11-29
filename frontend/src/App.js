@@ -5,32 +5,28 @@ import Login from './pages/login';
 import React, { useState, useEffect } from 'react';
 import Signup from './pages/signup';
 import Dashboard from './pages/dashboard';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import StarIcon from '@mui/icons-material/Star';
 import AddCardIcon from '@mui/icons-material/AddCard';
 
+
 const drawerWidth = 240;
 
 export default function App() {
-  const [ login, setLogin ] = useState(false);
+  const [ login, setLogin ] = useState(true);
   const [ signup, setSignUp ] = useState(false);
-  const [ loggedInUser, setLoggedInUser ] = useState(null);
+  const [ loggedInUser, setLoggedInUser ] = useState("haoruikun");
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const location = useLocation();
-  const [ currentPage, setCurrentPage ] = useState("Dashboard")
+  const [ currentPage, setCurrentPage ] = useState("Dashboard");
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -49,9 +45,12 @@ export default function App() {
     setMobileOpen(!mobileOpen);
   };
 
+
   const drawer = (
     <div>
-      <Toolbar />
+      <div className="logo-container">
+        <img className="app-logo" src={logo} alt="Every Penny" />
+      </div>
       <Divider />
       <List>
         <ListItem button selected={location.pathname === "/"} onClick={() => {navigate("/")}}>
@@ -91,28 +90,7 @@ export default function App() {
   } else if (login) {
     return (
       <Box sx={{ display: 'flex' }}>
-        <AppBar
-          position="fixed"
-          sx={{
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            ml: { sm: `${drawerWidth}px` },
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: 'none' } }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              {currentPage}
-            </Typography>
-          </Toolbar>
-        </AppBar>
+
         <Box
           component="nav"
           sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -144,12 +122,18 @@ export default function App() {
             {drawer}
           </Drawer>
         </Box>
-        <Dashboard />
-        {/* <Routes>
-          <Route exact path="/">
-            <Dashboard />
-          </Route>
-        </Routes> */}
+        <Routes>
+          <Route exact path="/" element={
+            <Dashboard 
+              login={login} 
+              username={loggedInUser} 
+              currentPage={currentPage}
+              setLogin={setLogin}
+              setLoggedInUser={setLoggedInUser}
+              handleDrawerToggle={handleDrawerToggle}
+            />
+          } />
+        </Routes>
       </Box>
     );
   } else {

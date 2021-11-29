@@ -15,7 +15,7 @@ app.post("/signup", (req, res) => {
         client.query("SELECT username FROM users").then((queryResponse) => {
             queryResponse.rows.forEach((row) => {
                 if (row.username === req.body.username) {
-                    return res.send({ result: "Username exsits!" })
+                    return res.send({ result: "Username exsits!" });
                 }
             })
             
@@ -62,6 +62,19 @@ app.post("/login", (req, res) => {
                 } catch {
                     res.status(500).send()
                 }
+            })
+        })
+})
+
+app.post("/dashboard_spending", (req, res) => {
+    const client = createClient();
+    client.connect()
+        .then(() => {
+            const username = req.body.username;
+            const query = `SELECT amount,category_id,purchase_date,username FROM expense LEFT JOIN users ON users.id=expense.user_id WHERE username='${username}';`;
+            client.query(query)
+            .then((queryResponse) => {
+                res.send(queryResponse.rows);
             })
         })
 })

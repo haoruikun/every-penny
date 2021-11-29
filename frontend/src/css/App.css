@@ -2,7 +2,45 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 30px;
-  pointer-events: none;
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+}
+
+.app-logo {
+  width: 80%;
+}
+
+.page-wrapper {
+  margin-top: 64px;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.loader {
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  margin-top: 64px;
+  height: calc(100vh - 64px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 9;
+  background-color: white;
+}
+
+@media only screen and (max-width: 600px) {
+  .page-wrapper {
+    margin-top: 54px;
+  }
+
+  .loader {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 54px;
+    height: 100vh;
+  }
 }
