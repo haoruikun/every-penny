@@ -71,7 +71,10 @@ app.post("/dashboard_spending", (req, res) => {
     client.connect()
         .then(() => {
             const username = req.body.username;
-            const query = `SELECT amount,category_id,purchase_date,username FROM expense LEFT JOIN users ON users.id=expense.user_id WHERE username='${username}';`;
+            const year = req.body.year;
+            const month = req.body.month;
+            const query = `SELECT amount,category_id,purchase_date,username FROM expense LEFT JOIN users ON users.id=expense.user_id WHERE username='${username}' AND EXTRACT (MONTH FROM purchase_date) = ${month} AND EXTRACT (YEAR FROM purchase_date) = ${year};`;
+            // console.log(query);
             client.query(query)
             .then((queryResponse) => {
                 res.send(queryResponse.rows);

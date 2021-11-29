@@ -20,10 +20,11 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3002/spending_by_month
+POST http://localhost:3002/dashboard_spending
 Content-Type: application/json
 
 {
     "username": "haoruikun",
-    "year_month": "2021-11"
+    "year": 2021,
+    "month": 11
 }
