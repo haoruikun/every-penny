@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 // or for Day.js
 // import DateAdapter from '@mui/lab/AdapterLuxon';
 
@@ -13,11 +12,18 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#57CC99',
+      dark: '#38a3a5',
+      light: '#38a3a5',
       contrastText: 'white',
     },
     secondary: {
       main: '#FFD260',
       contrastText: 'white',
+    },
+    text: {
+      primary: 'rgb(34, 87, 122)',
+      secondary: 'rgba(34, 87, 122, 0.8)',
+      disabled: 'rgba(34, 87, 122, 0.5)',
     },
   },
   typography: {

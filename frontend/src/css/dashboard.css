@@ -1,0 +1,15 @@
+.date-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.date-header h4 {
+  margin: 15px 10px 15px 0;
+}
+
+/* thead {
+  background-color: #57cc99;
+} */

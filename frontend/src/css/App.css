@@ -2,6 +2,15 @@
   text-align: center;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #22577a;
+}
+
 .logo-container {
   display: flex;
   justify-content: center;
@@ -17,7 +26,7 @@
   margin-top: 64px;
   box-sizing: border-box;
   padding: 20px;
-  width: 100%;
+  width: calc(100% - 240px);
 }
 
 .loader {
@@ -36,6 +45,7 @@
 @media only screen and (max-width: 600px) {
   .page-wrapper {
     margin-top: 54px;
+    width: 100%;
   }
 
   .loader {

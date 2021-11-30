@@ -34,7 +34,7 @@ app.post("/signup", (req, res) => {
                     });
                 })
             } catch {
-                res.status(500).send()
+                res.status(500).send();
             }
         });
     });

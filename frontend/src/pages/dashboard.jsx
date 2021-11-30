@@ -3,24 +3,29 @@ import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 import TopBar from '../components/topBar';
 import '../css/App.css';
+import '../css/dashboard.css';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-
+import DoughnutChart from '../components/doughnutChart';
+import Categories from '../components/categories';
+import { Grid } from '@mui/material';
 
 function Dashboard(props) {
   const [ expenses, setExpenses ] = useState([]);
   const [ isLoading, setIsLoading ] = useState(true);
+  const [ chartData, setChartData ] = useState([]);
+  const [ chartColor, setChartColor ] = useState([]);
+  const [ chartLabels, setChartLabels ] = useState([]);
+  const [ categoriesHeight, setCategoriesHeight] = useState('0px');
   const [ date, setDate ] = useState(new Date());
-
 
   let totalSpending = 0;
   expenses.forEach((spending) => {
     totalSpending += spending.amount;
   })
-  
 
   useEffect(() => {
     if (props.login) {
@@ -39,17 +44,49 @@ function Dashboard(props) {
         .then((response) => response.json())
         .then((json) => {
           setExpenses(json);
-          console.log(json);
+          // console.log(json);
+          // processing data for the chart
+          const chartPallete = ['#22577A', '#38A3A5', '#57CC99', '#80ED99','#d9ed92', '#00b4d8', '#94d2bd', '#C7F9CC'];
+          const labels = ['Home & Utilities', 'Transportation', 'Groceries', 'Health', 'Dining', 'Shopping', 'Education', 'Others']
+          const sumByCategory = [];
+          const selectedColor = [];
+          const selectedLabels = [];
+          let categories = [];
+          json.forEach((expense) => {
+              if (!categories.includes(expense.category_id)) {
+                  categories.push(expense.category_id);
+              }
+          })
+          // console.log(categories);
+          // detect if the category is in the list from 1-8
+          for (let i = 1; i <= 8; i++) {
+              if (categories.includes(i)) {
+              // if it includes, then calculate the sum of this category
+              let sum = 0;
+              json.forEach((expense)=>{
+                  if(expense.category_id === i) {
+                      sum += expense.amount;
+                  }
+              })
+              sumByCategory.push(sum);
+              selectedColor.push(chartPallete[i-1]);
+              selectedLabels.push(labels[i-1]);
+              } 
+          }
+          // console.log(sumByCategory);
+          // console.log(selectedColor);
+          setChartData(sumByCategory);
+          setChartColor(selectedColor);
+          setChartLabels(selectedLabels);
+          //end of data processing
+          //get the height of categories
+          setCategoriesHeight(getComputedStyle(document.querySelector('table')).getPropertyValue('height'));
           setIsLoading(false);
         })
     }
   }, [props.login, date])
 
     return (
-      // <Box
-      //     component="main"
-      //     sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-      // ></Box>
       <>
           <TopBar 
             username={props.username} 
@@ -63,23 +100,42 @@ function Dashboard(props) {
           <CircularProgress />
         </div>}
         <div className="page-wrapper">
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Box m={2}>
-              <DatePicker
-                inputFormat="yyyy-MM"
-                views={['year', 'month']}
-                label="Pick your month"
-                minDate={new Date('2012-03-01')}
-                maxDate={new Date('2023-06-01')}
-                value={date}
-                onChange={setDate}
-                renderInput={(params) => <TextField {...params} helperText={null} />}
+          <div className="date-header">
+            <Typography variant="h4"fontWeight={700}>
+              Total Spending in {date.toLocaleString('default', { month: 'long' })}: ${totalSpending.toFixed(2)} 
+            </Typography>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Box>
+                <DatePicker
+                  inputFormat="yyyy-MM"
+                  views={['year', 'month']}
+                  label="Pick your month"
+                  minDate={new Date('2012-03-01')}
+                  maxDate={new Date('2023-06-01')}
+                  value={date}
+                  onChange={setDate}
+                  renderInput={(params) => <TextField {...params} helperText={null} />}
+                />
+              </Box>
+            </LocalizationProvider>
+          </div>
+          <Grid container spacing={2} sx={{mt: 1}}>
+            <Grid item xs={12} lg={8} >
+              <DoughnutChart 
+                chartdata={chartData}
+                chartcolor={chartColor}
+                chartlables={chartLabels}
+                height={categoriesHeight}
               />
-            </Box>
-          </LocalizationProvider>
-          <Typography variant="h4">
-            Your Total Spending: ${totalSpending.toFixed(2)} 
-          </Typography>
+            </Grid>
+            <Grid item xs={12} lg={4} >
+              <Categories 
+                chartdata={chartData}
+                chartcolor={chartColor}
+                chartlables={chartLabels}
+              />
+            </Grid>
+          </Grid>
         </div>
       </>
     );
