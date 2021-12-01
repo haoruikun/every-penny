@@ -1,4 +1,4 @@
-GET http://localhost:3002/users
+GET http://localhost:3002/toggle_bookmark/27
 
 ###
 
@@ -27,4 +27,12 @@ Content-Type: application/json
     "username": "haoruikun",
     "year": 2021,
     "month": 11
+}
+
+###
+POST http://localhost:3002/all_spending
+Content-Type: application/json
+
+{
+    "username": "haoruikun"
 }
