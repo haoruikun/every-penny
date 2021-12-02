@@ -17,6 +17,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import StarIcon from "@mui/icons-material/Star";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import All from "./pages/all";
+import Bookmark from "./pages/bookmark";
 
 const drawerWidth = 240;
 
@@ -172,6 +173,20 @@ export default function App() {
             path="/all"
             element={
               <All
+                login={login}
+                username={loggedInUser}
+                currentPage={currentPage}
+                setLogin={setLogin}
+                setLoggedInUser={setLoggedInUser}
+                handleDrawerToggle={handleDrawerToggle}
+              />
+            }
+          />
+          <Route
+            exact
+            path="/bookmark"
+            element={
+              <Bookmark
                 login={login}
                 username={loggedInUser}
                 currentPage={currentPage}

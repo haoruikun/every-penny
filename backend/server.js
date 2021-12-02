@@ -106,6 +106,19 @@ app.post("/all_spending", (req, res) => {
   });
 });
 
+app.post("/bookmark", (req, res) => {
+  const client = createClient();
+  client.connect().then(() => {
+    const username = req.body.username;
+    const query = `SELECT expense.id,amount,reason,category_id,purchase_date,username,bookmark FROM expense LEFT JOIN users ON users.id=expense.user_id WHERE username='${username}' AND bookmark = true ORDER BY purchase_date DESC ;`;
+    // console.log(query);
+    client.query(query).then((queryResponse) => {
+      res.send(queryResponse.rows);
+      client.end();
+    });
+  });
+});
+
 app.get("/toggle_bookmark/:id", (req, res) => {
   const client = createClient();
   client.connect().then(() => {

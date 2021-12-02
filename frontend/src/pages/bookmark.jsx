@@ -26,14 +26,14 @@ import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import dateFormat from "dateformat";
 import BookmarkButton from "../components/BookmarkButton";
 
-function All({ ...props }) {
+function Bookmark({ ...props }) {
   const [isLoading, setIsLoading] = useState(true);
   const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
     if (props.login) {
       setIsLoading(true);
-      fetch("http://localhost:3002/all_spending", {
+      fetch("http://localhost:3002/bookmark", {
         method: "POST",
         body: JSON.stringify({
           username: props.username,
@@ -142,4 +142,4 @@ function All({ ...props }) {
   );
 }
 
-export default All;
+export default Bookmark;
