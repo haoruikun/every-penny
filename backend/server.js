@@ -138,6 +138,38 @@ app.get("/toggle_bookmark/:id", (req, res) => {
   });
 });
 
+app.post("/record", (req, res) => {
+  const client = createClient();
+  client.connect().then(() => {
+    console.log(req.body);
+    const { username, category, amount, reason, date } = req.body;
+    client
+      .query(`SELECT id from users WHERE username = '${username}';`)
+      .then((queryResponse) => {
+        client
+          .query(
+            `INSERT INTO expense(reason,amount,category_id,user_id,purchase_date,bookmark)VALUES('${reason}',${amount},${category},${queryResponse.rows[0].id},'${date}',false);`
+          )
+          .then((queryResponse) => {
+            if (queryResponse.command === "INSERT") {
+              res.send({ result: "success" });
+              client.end();
+            } else {
+              res.status(500).send({ result: "fail" });
+              client.end();
+            }
+          });
+      });
+    // const category = req.body.category;
+    // const query = `SELECT expense.id,amount,reason,category_id,purchase_date,username,bookmark FROM expense LEFT JOIN users ON users.id=expense.user_id WHERE username='${username}' AND bookmark = true ORDER BY purchase_date DESC ;`;
+    // // console.log(query);
+    // client.query(query).then((queryResponse) => {
+    //   res.send(queryResponse.rows);
+    //   client.end();
+    // });
+  });
+});
+
 function createClient() {
   const client = new Client({
     connectionString: process.env.CONNECTION_STRING,

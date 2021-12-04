@@ -18,6 +18,7 @@ import StarIcon from "@mui/icons-material/Star";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import All from "./pages/all";
 import Bookmark from "./pages/bookmark";
+import Record from "./pages/record";
 
 const drawerWidth = 240;
 
@@ -187,6 +188,20 @@ export default function App() {
             path="/bookmark"
             element={
               <Bookmark
+                login={login}
+                username={loggedInUser}
+                currentPage={currentPage}
+                setLogin={setLogin}
+                setLoggedInUser={setLoggedInUser}
+                handleDrawerToggle={handleDrawerToggle}
+              />
+            }
+          />
+          <Route
+            exact
+            path="/record"
+            element={
+              <Record
                 login={login}
                 username={loggedInUser}
                 currentPage={currentPage}

@@ -36,3 +36,13 @@ Content-Type: application/json
 {
     "username": "haoruikun"
 }
+
+POST http://localhost:3002/record
+Content-Type: application/json
+
+{
+    "category": "1",
+    "amount": 25,
+    "reason": "testing",
+    "date": "2011-11-11"
+}
