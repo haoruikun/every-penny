@@ -29,6 +29,9 @@ import BookmarkButton from "../components/BookmarkButton";
 function Bookmark({ ...props }) {
   const [isLoading, setIsLoading] = useState(true);
   const [expenses, setExpenses] = useState([]);
+  useEffect(() => {
+    document.title = "Bookmark";
+  });
 
   useEffect(() => {
     if (props.login) {

@@ -42,6 +42,9 @@ function All({ ...props }) {
   const [modalBody, setModalBody] = useState(<div></div>);
   const [refresh, setRefresh] = useState(true);
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "All";
+  });
 
   useEffect(() => {
     if (props.login) {

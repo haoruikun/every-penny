@@ -21,13 +21,14 @@ import Bookmark from "./pages/bookmark";
 import Record from "./pages/record";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Error from "./pages/Error";
 
 const drawerWidth = 240;
 
 export default function App() {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
   const [signup, setSignUp] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState("haoruikun");
+  const [loggedInUser, setLoggedInUser] = useState();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState("Dashboard");
@@ -213,6 +214,7 @@ export default function App() {
               />
             }
           />
+          <Route path="*" element={<Error />} />
         </Routes>
         <ToastContainer />
       </Box>

@@ -31,6 +31,9 @@ function Dashboard(props) {
   expenses.forEach((spending) => {
     totalSpending += spending.amount;
   });
+  useEffect(() => {
+    document.title = "Dashboard";
+  });
 
   useEffect(() => {
     if (props.login) {

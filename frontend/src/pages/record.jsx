@@ -91,6 +91,10 @@ function Record({ ...props }) {
       });
     }
   };
+
+  useEffect(() => {
+    document.title = "Record";
+  });
   return (
     <>
       <TopBar {...props} />

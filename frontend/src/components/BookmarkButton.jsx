@@ -27,13 +27,14 @@ export default function BookmarkButton({ bookmarked, id }) {
           size={20}
           sx={{ width: 5, height: 5 }}
           color="warning"
+          data-testid="loading"
         />
       </Box>
     );
   } else {
     return (
       <IconButton aria-label="bookmark" color="warning" onClick={handleToggle}>
-        {active ? <StarIcon /> : <StarBorderIcon />}
+        {active ? <StarIcon data-testid="star" /> : <StarBorderIcon />}
       </IconButton>
     );
   }
