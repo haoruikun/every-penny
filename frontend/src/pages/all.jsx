@@ -10,6 +10,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  IconButton,
+  Button,
 } from "@mui/material";
 import TopBar from "../components/topBar";
 import "../css/App.css";
@@ -25,10 +27,21 @@ import SchoolIcon from "@mui/icons-material/School";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import dateFormat from "dateformat";
 import BookmarkButton from "../components/BookmarkButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import MyModal from "../components/MyModal";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
+import UpdateForm from "../components/UpdateForm";
 
 function All({ ...props }) {
   const [isLoading, setIsLoading] = useState(true);
   const [expenses, setExpenses] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("Modal");
+  const [modalBody, setModalBody] = useState(<div></div>);
+  const [refresh, setRefresh] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (props.login) {
@@ -49,11 +62,11 @@ function All({ ...props }) {
           setIsLoading(false);
         });
     }
-  }, [props.login, props.username]);
+  }, [props.login, props.username, refresh]);
 
-  useEffect(() => {
-    console.log(expenses);
-  }, [expenses]);
+  // useEffect(() => {
+  //   console.log(expenses);
+  // }, [expenses]);
 
   const chartPallete = [
     "#22577A",
@@ -85,6 +98,7 @@ function All({ ...props }) {
                   <TableCell>Amount</TableCell>
                   <TableCell>Reason</TableCell>
                   <TableCell>Date</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -131,12 +145,90 @@ function All({ ...props }) {
                     <TableCell>
                       {dateFormat(expense.purchase_date, "mm/dd/yyyy")}
                     </TableCell>
+                    <TableCell>
+                      <IconButton
+                        aria-label="edit"
+                        color="primary"
+                        onClick={() => {
+                          setModalOpen(true);
+                          setModalTitle();
+                          setModalBody(
+                            <UpdateForm
+                              setRefresh={setRefresh}
+                              id={expense.id}
+                              username={props.username}
+                              setModalOpen={setModalOpen}
+                              refresh={refresh}
+                            />
+                          );
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => {
+                          setModalOpen(true);
+                          setModalTitle(
+                            "Are you sure you want to delete this record?"
+                          );
+                          setModalBody(
+                            <Box
+                              sx={{ display: "flex", justifyContent: "end" }}
+                            >
+                              <Button
+                                variant="text"
+                                onClick={() => {
+                                  setModalOpen(false);
+                                }}
+                              >
+                                No
+                              </Button>
+                              <Button
+                                variant="text"
+                                color="error"
+                                onClick={() => {
+                                  fetch(
+                                    `http://localhost:3002/delete/${expense.id}`,
+                                    {
+                                      method: "DELETE",
+                                    }
+                                  ).then((json) => {
+                                    console.log(json);
+                                    if (json.status === 204) {
+                                      toast.success("Record was deleted");
+                                      setModalOpen(false);
+                                      setRefresh(!refresh);
+                                    } else {
+                                      alert("Something went wrong!");
+                                    }
+                                  });
+                                }}
+                              >
+                                Yes
+                              </Button>
+                            </Box>
+                          );
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Card>
+        {modalOpen && (
+          <MyModal
+            setModalOpen={setModalOpen}
+            modalOpen={modalOpen}
+            title={modalTitle}
+            body={modalBody}
+          />
+        )}
       </div>
     </>
   );

@@ -46,3 +46,20 @@ Content-Type: application/json
     "reason": "testing",
     "date": "2011-11-11"
 }
+
+###
+DELETE http://localhost:3002/delete/51
+Content-Type: application/json
+
+###
+
+PUT http://localhost:3002/record
+Content-Type: application/json
+
+{
+    "category": "1",
+    "amount": 25,
+    "reason": "testing modified",
+    "date": "2011-11-11",
+    "id": 52
+}

@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  Avatar,
-  Box,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
   InputLabel,
   MenuItem,
@@ -19,6 +11,7 @@ import {
   OutlinedInput,
   Grid,
   Button,
+  FormHelperText,
 } from "@mui/material";
 import TopBar from "../components/topBar";
 import "../css/App.css";
@@ -26,24 +19,19 @@ import "../css/dashboard.css";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import CircularProgress from "@mui/material/CircularProgress";
-import HomeIcon from "@mui/icons-material/Home";
-import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
-import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
-import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import SchoolIcon from "@mui/icons-material/School";
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import dateFormat from "dateformat";
-import BookmarkButton from "../components/BookmarkButton";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 function Record({ ...props }) {
   const [category, setCategory] = useState(null);
-  const [reason, setReason] = useState("");
-  const [amount, setAmount] = useState();
+  const [reason, setReason] = useState(null);
+  const [amount, setAmount] = useState(null);
   const [date, setDate] = useState(new Date());
-
+  const [amountError, setAmountError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [reasonError, setReasonError] = useState(false);
+  const navigate = useNavigate();
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
@@ -58,48 +46,56 @@ function Record({ ...props }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    function pgFormatDate(date) {
-      /* Via http://stackoverflow.com/questions/3605214/javascript-add-leading-zeroes-to-date */
-      function zeroPad(d) {
-        return ("0" + d).slice(-2);
+    amount ? setAmountError(false) : setAmountError(true);
+    category ? setCategoryError(false) : setCategoryError(true);
+    reason ? setReasonError(false) : setReasonError(true);
+
+    if (amount && category && reason) {
+      function pgFormatDate(date) {
+        /* Via http://stackoverflow.com/questions/3605214/javascript-add-leading-zeroes-to-date */
+        function zeroPad(d) {
+          return ("0" + d).slice(-2);
+        }
+
+        var parsed = new Date(date);
+
+        return [
+          parsed.getUTCFullYear(),
+          zeroPad(parsed.getMonth() + 1),
+          zeroPad(parsed.getDate()),
+          zeroPad(parsed.getHours()),
+          zeroPad(parsed.getMinutes()),
+          zeroPad(parsed.getSeconds()),
+        ].join(" ");
       }
-
-      var parsed = new Date(date);
-
-      return [
-        parsed.getUTCFullYear(),
-        zeroPad(parsed.getMonth() + 1),
-        zeroPad(parsed.getDate()),
-        zeroPad(parsed.getHours()),
-        zeroPad(parsed.getMinutes()),
-        zeroPad(parsed.getSeconds()),
-      ].join(" ");
-    }
-    const formattedDate = pgFormatDate(date);
-    fetch("http://localhost:3002/record", {
-      method: "POST",
-      body: JSON.stringify({
-        username: props.username,
-        category,
-        reason,
-        amount: parseFloat(amount),
-        date: dateFormat(date, "yyyy-mm-dd"),
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        Accept: "application/json",
-      },
-    }).then((response) => {
-      response.json().then((json) => {
-        console.log(json);
+      fetch("http://localhost:3002/record", {
+        method: "POST",
+        body: JSON.stringify({
+          username: props.username,
+          category,
+          reason,
+          amount: parseFloat(amount),
+          date: dateFormat(date, "yyyy-mm-dd"),
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          Accept: "application/json",
+        },
+      }).then((response) => {
+        response.json().then((json) => {
+          if (json.result === "success") {
+            toast.success("Spending Recorded!");
+            navigate("/all");
+          }
+        });
       });
-    });
+    }
   };
   return (
     <>
       <TopBar {...props} />
       <div className="page-wrapper">
-        <Paper sx={{ maxWidth: 600, m: "auto", p: 10 }}>
+        <Paper sx={{ maxWidth: 600, m: "auto", p: 10, mt: 5 }}>
           <form action="#" onSubmit={handleSubmit}>
             <Typography sx={{ mb: 3 }} variant="h4">
               Record Spending
@@ -126,7 +122,7 @@ function Record({ ...props }) {
 
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
+                <FormControl error={amountError} fullWidth>
                   <InputLabel htmlFor="amount">Amount</InputLabel>
                   <OutlinedInput
                     id="amount"
@@ -136,11 +132,15 @@ function Record({ ...props }) {
                       <InputAdornment position="start">$</InputAdornment>
                     }
                     label="Amount"
+                    type="number"
                   />
+                  {amountError && (
+                    <FormHelperText>Please enter an amount!</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={8}>
-                <FormControl fullWidth sx={{ mb: 3 }}>
+                <FormControl error={categoryError} fullWidth sx={{ mb: 3 }}>
                   <InputLabel id="category-select-label">Category</InputLabel>
                   <Select
                     labelId="category-select-label"
@@ -158,10 +158,13 @@ function Record({ ...props }) {
                     <MenuItem value={7}>Education</MenuItem>
                     <MenuItem value={8}>Others</MenuItem>
                   </Select>
+                  {categoryError && (
+                    <FormHelperText>Please select a category!</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
             </Grid>
-            <FormControl fullWidth sx={{ mb: 3 }}>
+            <FormControl error={reasonError} fullWidth sx={{ mb: 3 }}>
               <TextField
                 id="reason"
                 label="Reason"
@@ -169,6 +172,9 @@ function Record({ ...props }) {
                 value={reason}
                 onChange={handleReasonChange}
               />
+              {reasonError && (
+                <FormHelperText>Please enter a reason!</FormHelperText>
+              )}
             </FormControl>
             <Button
               variant="contained"

@@ -19,6 +19,8 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import All from "./pages/all";
 import Bookmark from "./pages/bookmark";
 import Record from "./pages/record";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const drawerWidth = 240;
 
@@ -212,6 +214,7 @@ export default function App() {
             }
           />
         </Routes>
+        <ToastContainer />
       </Box>
     );
   } else {

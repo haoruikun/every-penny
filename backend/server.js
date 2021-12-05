@@ -160,13 +160,56 @@ app.post("/record", (req, res) => {
             }
           });
       });
-    // const category = req.body.category;
-    // const query = `SELECT expense.id,amount,reason,category_id,purchase_date,username,bookmark FROM expense LEFT JOIN users ON users.id=expense.user_id WHERE username='${username}' AND bookmark = true ORDER BY purchase_date DESC ;`;
-    // // console.log(query);
-    // client.query(query).then((queryResponse) => {
-    //   res.send(queryResponse.rows);
-    //   client.end();
-    // });
+  });
+});
+
+app.get("/record/:id", (req, res) => {
+  const client = createClient();
+  client.connect().then(() => {
+    client
+      .query("SELECT * FROM expense WHERE id = $1", [req.params.id])
+      .then((queryResponse) => {
+        if (queryResponse.rowCount === 1) {
+          res.json(queryResponse.rows[0]);
+          client.end();
+        } else {
+          res.status(500).send();
+          client.end();
+        }
+      });
+  });
+});
+
+app.put("/record", (req, res) => {
+  const client = createClient();
+  client.connect().then(() => {
+    console.log(req.body);
+    const { category, amount, reason, date, id } = req.body;
+    client
+      .query(
+        `UPDATE expense
+      SET reason='${reason}',amount=${amount},category_id=${category},purchase_date='${date}' WHERE id=${id};`
+      )
+      .then((queryResponse) => {
+        res.send(queryResponse);
+      });
+  });
+});
+
+app.delete("/delete/:id", (req, res) => {
+  const client = createClient();
+  client.connect().then(() => {
+    client
+      .query("DELETE from expense WHERE id = $1;", [req.params.id])
+      .then((queryResponse) => {
+        console.log(queryResponse.rowCount);
+        if (queryResponse.rowCount === 1) {
+          res.status(204).send();
+        } else {
+          res.status(500).send();
+          client.end();
+        }
+      });
   });
 });
 
