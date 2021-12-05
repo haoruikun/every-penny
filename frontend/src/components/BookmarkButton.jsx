@@ -11,12 +11,14 @@ export default function BookmarkButton({ bookmarked, id }) {
 
   function handleToggle() {
     setLoading(true);
-    fetch(`http://localhost:3002/toggle_bookmark/${id}`).then((response) => {
-      if (response.status === 200) {
-        toggle(!active);
-        setLoading(false);
+    fetch(`https://harry-expense-api.herokuapp.com/toggle_bookmark/${id}`).then(
+      (response) => {
+        if (response.status === 200) {
+          toggle(!active);
+          setLoading(false);
+        }
       }
-    });
+    );
   }
   if (loading) {
     return (

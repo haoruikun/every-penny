@@ -49,7 +49,7 @@ function All({ ...props }) {
   useEffect(() => {
     if (props.login) {
       setIsLoading(true);
-      fetch("http://localhost:3002/all_spending", {
+      fetch("https://harry-expense-api.herokuapp.com/all_spending", {
         method: "POST",
         body: JSON.stringify({
           username: props.username,
@@ -193,7 +193,7 @@ function All({ ...props }) {
                                 color="error"
                                 onClick={() => {
                                   fetch(
-                                    `http://localhost:3002/delete/${expense.id}`,
+                                    `https://harry-expense-api.herokuapp.com/delete/${expense.id}`,
                                     {
                                       method: "DELETE",
                                     }

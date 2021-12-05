@@ -37,7 +37,7 @@ function Dashboard(props) {
 
   useEffect(() => {
     if (props.login) {
-      fetch("http://localhost:3002/dashboard_spending", {
+      fetch("https://harry-expense-api.herokuapp.com/dashboard_spending", {
         method: "POST",
         body: JSON.stringify({
           username: props.username,

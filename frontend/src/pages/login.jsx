@@ -26,7 +26,7 @@ export default function Login(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch("http://localhost:3002/login", {
+    fetch("https://harry-expense-api.herokuapp.com/login", {
       method: "POST",
       body: JSON.stringify({
         username,

@@ -36,7 +36,7 @@ export default function SignUp(props) {
       setPassword2Error(true);
     } else {
       setPassword2Error(false);
-      fetch("http://localhost:3002/signup", {
+      fetch("https://harry-expense-api.herokuapp.com/signup", {
         method: "POST",
         body: JSON.stringify({
           username,

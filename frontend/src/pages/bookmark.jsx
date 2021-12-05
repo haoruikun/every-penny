@@ -36,7 +36,7 @@ function Bookmark({ ...props }) {
   useEffect(() => {
     if (props.login) {
       setIsLoading(true);
-      fetch("http://localhost:3002/bookmark", {
+      fetch("https://harry-expense-api.herokuapp.com/bookmark", {
         method: "POST",
         body: JSON.stringify({
           username: props.username,

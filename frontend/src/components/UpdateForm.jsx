@@ -47,16 +47,18 @@ export default function UpdateForm(props) {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:3002/record/${props.id}`).then((response) => {
-      response.json().then((json) => {
-        console.log(json);
-        setAmount(json.amount);
-        setDate(json.purchase_date);
-        setReason(json.reason);
-        setCategory(json.category_id);
-        setIsLoading(false);
-      });
-    });
+    fetch(`https://harry-expense-api.herokuapp.com/record/${props.id}`).then(
+      (response) => {
+        response.json().then((json) => {
+          console.log(json);
+          setAmount(json.amount);
+          setDate(json.purchase_date);
+          setReason(json.reason);
+          setCategory(json.category_id);
+          setIsLoading(false);
+        });
+      }
+    );
   }, [props.setRefresh]);
 
   const handleSubmit = (event) => {
@@ -66,7 +68,7 @@ export default function UpdateForm(props) {
     reason ? setReasonError(false) : setReasonError(true);
 
     if (amount && category && reason) {
-      fetch("http://localhost:3002/record", {
+      fetch("https://harry-expense-api.herokuapp.com/record", {
         method: "PUT",
         body: JSON.stringify({
           username: props.username,

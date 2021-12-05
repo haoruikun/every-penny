@@ -68,7 +68,7 @@ function Record({ ...props }) {
           zeroPad(parsed.getSeconds()),
         ].join(" ");
       }
-      fetch("http://localhost:3002/record", {
+      fetch("https://harry-expense-api.herokuapp.com/record", {
         method: "POST",
         body: JSON.stringify({
           username: props.username,
